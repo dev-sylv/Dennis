@@ -1,0 +1,4 @@
+- mongoose
+- express
+- nodemon
+- download and install mongodb compass.

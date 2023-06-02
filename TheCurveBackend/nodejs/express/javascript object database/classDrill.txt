@@ -1,0 +1,11 @@
+Provide a solution for fueling station where these requirement are to be met:
+1. staff registration
+2. staff removal
+3. staff information update
+4. find the a particular staff credential
+5. use the below information:
+- staffName
+- staffAddress
+- staffSalary
+- staffPosition
+- staffGender

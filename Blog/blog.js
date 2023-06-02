@@ -15,10 +15,11 @@ app.use(express.json());
 // Read your data in the database that is, the blog post users are posting, to read them, code is:
 const ReadAllBlog = (req, res) =>{
   const filePath = path.join(__dirname, './', 'blog.json');
-    const blogData = fs.readFileSync(filePath, 'utf8');
-  return JSON.parse(blogData);
+    const blogData = fs.readFileSync(filePath);
+    // return JSON.parse(blogData);
+    res.status()
 }
-// console.log(ReadAllBlog())
+console.log(ReadAllBlog())
 
 // General Get:
 app.get("/", (req, res) =>{
@@ -39,7 +40,7 @@ app.post('/add-blog', (req, res) => {
     const blogDB = ReadAllBlog();
     
     const newBlog = {
-      id:   1,
+      id: 1,
       name,
       tittle,
       Content
@@ -52,6 +53,8 @@ app.post('/add-blog', (req, res) => {
       success: true,
       data: newBlog
     });
+    console.log("data",newBlog );
+    console.log("push",newBlog );
   });
 
 // Users edit(update) a blog post:

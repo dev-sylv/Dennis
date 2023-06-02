@@ -10,105 +10,105 @@ const port = 2040;
 const app = express();
 app.use(express.json());
 
-// Read your data in the database that is, the blog post users are posting, to read them, code is:
-const ReadAllBlog = (req, res) => {
-  const filePath = path.join(__dirname, "./", "blog.json");
+// Read your data in the database that is, the employee records users are posting, to read them, code is:
+const ReadAllEmployees = (req, res) => {
+  const filePath = path.join(__dirname, "./", "employee.json");
   const blogData = fs.readFileSync(filePath, "utf8");
   return JSON.parse(blogData);
 };
-// console.log(ReadAllBlog())
+// console.log(ReadAllEmployees())
 
 // General Get:
 app.get("/", (req, res) => {
   res.json({
-    message: "Blog API up and running",
+    message: "Employee API up and running",
   });
 });
 
-// The blogs the user is adding up to, they come to the blog.json file:
-const UsersBlog = (data) => {
+// The blogs the user is adding up to, they come to the employee.json file:
+const EmployeeBlog = (data) => {
   fs.writeFileSync(
-    path.join(__dirname, "./", "blog.json"),
+    path.join(__dirname, "./", "employee.json"),
     JSON.stringify(data, null, 2),
     "utf8"
   );
 };
 
-// Users add a blog post that is create a blog post:
-app.post("/add-blog", (req, res) => {
-  const { name, tittle, Content } = req.body;
-  const blogDB = ReadAllBlog();
+// Users add a employee records that is create a employee records:
+app.records("/add-employee", (req, res) => {
+  const { name, qualification, Content } = req.body;
+  const employeeDB = ReadAllEmployees();
 
-  const newBlog = {
+  const newEmployee = {
     id: 1,
     name,
-    tittle,
+    qualification,
     Content,
   };
 
-  blogDB?.UsersBlog?.push(newBlog);
-  UsersBlog(blogDB);
+  employeeDB?.EmployeeBlog?.push(newEmployee);
+  EmployeeBlog(employeeDB);
 
   res.status(200).json({
     success: true,
-    data: newBlog,
+    data: newEmployee,
   });
 });
 
-// Users edit(update) a blog post:
-app.put("/blog/:id", (req, res) => {
-  const { name, title, content } = req.body;
-  const blogDB = ReadAllBlog();
+// Users edit(update) a employee records:
+app.put("/employee/:id", (req, res) => {
+  const { name, qualification, content } = req.body;
+  const employeeDB = ReadAllEmployees();
 
   // Check if the request contains an "id" parameter
   if (req.body.id) {
-    const postId = req.body.id;
-    const existingPostIndex = blogDB.UsersBlog.findIndex(
-      (post) => post.id === postId
+    const employeeID = req.body.id;
+    const existingPostIndex = employeeDB.EmployeeBlog.findIndex(
+      (records) => records.id === employeeID
     );
 
     if (existingPostIndex !== -1) {
-      // If the blog post with the given ID exists, update its content
-      blogDB.UsersBlog[existingPostIndex] = {
-        ...blogDB.UsersBlog[existingPostIndex],
+      // If the employee records with the given ID exists, update its content
+      employeeDB.EmployeeBlog[existingPostIndex] = {
+        ...employeeDB.EmployeeBlog[existingPostIndex],
         name,
-        title,
+        qualification,
         content,
       };
-      UsersBlog(blogDB);
+      EmployeeBlog(employeeDB);
       res.status(200).json({
         success: true,
-        data: blogDB.UsersBlog[existingPostIndex],
+        data: employeeDB.EmployeeBlog[existingPostIndex],
       });
     } else {
       res.status(404).json({
-        error: "Blog post not found",
+        error: "Employee records not found",
       });
     }
   }
 });
 
-// Users delete a blog post:
-app.delete("/blog/:id", (req, res) => {
+// Users delete a employee records:
+app.delete("/employee/:id", (req, res) => {
   const blogId = parseInt(req.params.id);
-  const blogDB = ReadAllBlog();
+  const employeeDB = ReadAllEmployees();
 
-  const existingPostIndex = blogDB.UsersBlog.findIndex(
-    (post) => post.id === blogId
+  const existingPostIndex = employeeDB.EmployeeBlog.findIndex(
+    (records) => records.id === blogId
   );
 
   if (existingPostIndex !== -1) {
-    // If the blog post with the given ID exists, remove it from the array
-    blogDB.UsersBlog.splice(existingPostIndex, 1);
-    UsersBlog(blogDB);
+    // If the employee records with the given ID exists, remove it from the array
+    employeeDB.EmployeeBlog.splice(existingPostIndex, 1);
+    EmployeeBlog(employeeDB);
 
     res.status(200).json({
       success: true,
-      message: "Blog post deleted successfully",
+      message: "Employee records deleted successfully",
     });
   } else {
     res.status(404).json({
-      error: "Blog post not found",
+      error: "Employee records not found",
     });
   }
 });
