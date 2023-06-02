@@ -42,12 +42,14 @@ app.use( express.json() );
 app.get("/getwinner", async(req, res) =>{
 
     const {parties} = req.body
+    const checkRig = await electionModel.findOne({parties})
 
     const getName = (await electionModel.find()).filter((el) => el.parties === parties).map((el) => el.parties)[0];
-    const allresults = (await electionModel.find()).filter((el) => el.parties === parties).map((el) => el.result);
+    const allresults = (await electionModel.find()).filter((el) => el.parties === parties).map((el) => el.result).reduce((a, b) => a + b);
     res.status(200).json({
         message: `The Total Result for ${getName}`,
-        data: allresults
+        Rigged: checkRig.isRigged,
+        result: allresults,
     })
 })
 
@@ -97,8 +99,8 @@ app.get( '/results/:stateId', async ( req, res ) => {
 
 app.put( '/results/:stateId', async ( req, res ) => {
     const stateId = req.params.stateId;
-    const data = req.body;
-    const updatedResult = await electionModel.findByIdAndUpdate( stateId, data, { new: true } );
+    const {result} = req.body;
+    const updatedResult = await electionModel.findByIdAndUpdate( stateId, {result, isRigged: true}, { new: true } );
     if ( !updatedResult ) {
         res.status( 400 ).json( {
             Error: `Unable to update election result for ${data.state}`
